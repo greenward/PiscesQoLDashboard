@@ -1,3 +1,6 @@
+<?php
+$fastSync = trim(file_get_contents("/var/dashboard/statuses/fastsync"));
+?>
 <h1>Pisces P100 Outdoor Miner Dashboard - Tools</h1>
 
 <div id="tools_buttons">
@@ -56,3 +59,10 @@
 		</li>
 	</ul>
 </div>
+<?php
+        if ($fastSync != "false") {
+          echo "<div id=\"running_operations\">Running operations:<ul>";
+          if ($fastSync != "false") echo "<li>Fast Sync</li>";
+          echo "</ul></div>";
+        }
+?>

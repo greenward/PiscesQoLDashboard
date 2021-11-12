@@ -26,7 +26,7 @@ $pretty = array("LAN", "WLAN");
 
 $info['IP'] = str_replace($raw, $pretty, trim(file_get_contents("/var/dashboard/statuses/local-ip")));
 $info['ExternalIP'] = trim(file_get_contents("/var/dashboard/statuses/external-ip"));
-$info['CPU'] = $load[0];
+$info['CPU'] = trim(file_get_contents("/var/dashboard/statuses/cpu"));
 $info['DiskUsage'] = round($diskused/$disktotal*100, 2)."%";
 
 $gps = trim(file_get_contents("/var/dashboard/statuses/gps"));
@@ -35,6 +35,8 @@ $info['BT'] = trim(ucfirst(file_get_contents("/var/dashboard/statuses/bt")));
 $info['Miner'] = trim(file_get_contents("/var/dashboard/statuses/miner"));
 $info['Temp'] = trim(file_get_contents("/var/dashboard/statuses/temp"));
 $info['WiFi'] = trim(file_get_contents("/var/dashboard/statuses/wifi"));
+$info['CurrentVersion'] = trim(file_get_contents("/var/dashboard/statuses/current_miner_version"));
+$info['PiscesVersion'] = shell_exec("cat /home/pi/api/tool/version | grep \"version\" | sed 's/\"version\"://' | xargs");
 if($gps == 1)
 {
 $info['GPS'] = 'Enabled';
@@ -58,8 +60,10 @@ else
 <div id="miner_info">
 <h2>Miner Information</h2>
 <ul>
-<li>IP: <strong><?php echo $info['IP'].' / '.$info['ExternalIP']; ?></strong></li>
-<li>CPU: <?php echo $info['CPU']; ?></li>
+<li>Firmware Version: <?php echo $info['CurrentVersion']; ?></li>
+<li>Pisces Version: <?php echo $info['PiscesVersion']; ?></li>
+<li>IP: <?php echo $info['IP'].' / '.$info['ExternalIP']; ?></li>
+<li>CPU: <?php echo $info['CPU']; ?>%</li>
 <li>Mem: <?php echo $info['MemUsed']." / ".$info['MemTotal']." - ".$info['MemUsage']; ?></li>
 <li>Disk: <?php echo $info['DiskUsage']; ?></li>
 <li>Temp: <?php echo $info['Temp']; ?></li>

@@ -1,9 +1,9 @@
 [Unit]
-Description=Run the peer lsit check every 60 seconds.
+Description=Run the peer list check every 300 seconds.
 
 [Timer]
-OnBootSec=60
-OnUnitActiveSec=60
+OnBootSec=300
+OnUnitActiveSec=300
 AccuracySec=1ms
 
 [Install]

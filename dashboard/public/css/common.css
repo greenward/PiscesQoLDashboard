@@ -411,6 +411,17 @@ header #power_container a:hover {
 	display: block;
 }
 
+#main #content #running_operations {
+    margin-top: 120px;
+    padding: 2%;
+}
+
+#main #content #running_operations ul {
+    padding-left: 30px;
+    padding-top: 10px;
+    list-style-type: circle;
+}
+
 #main #content #peer_list {
 	margin: 20px 0;
 	padding: 2%;
