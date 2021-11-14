@@ -7,6 +7,7 @@ fi
 
 
 if id -nG admin | grep -qw "sudo"; then
+  apt-get --assume-yes lm-sensors
   rm -rf /tmp/latest.tar.gz
   rm -rf /tmp/dashboardinstall
   wget --no-cache https://raw.githubusercontent.com/briffy/PiscesQoLDashboard/main/latest.tar.gz -O /tmp/latest.tar.gz

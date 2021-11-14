@@ -7,5 +7,5 @@ sleep 5
 systemctl start nginx
 systemctl enable nginx
 
-systemctl start php7.3-fpm.service
-systemctl enable php7.3-fpm.service
+systemctl start php-fpm.service
+systemctl enable php-fpm.service
