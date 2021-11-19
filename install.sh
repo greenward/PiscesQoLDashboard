@@ -15,8 +15,8 @@ if id -nG admin | grep -qw "sudo"; then
     cd dashboardinstall
     systemctl stop pm2-pi.service
     systemctl disable pm2-pi.service
-
-    apt-get --assume-yes install nginx php-fpm lm-sensors
+    apt-get update
+    apt-get --assume-yes install nginx php-fpm
 
     mkdir /var/dashboard
     mkdir /etc/monitor-scripts

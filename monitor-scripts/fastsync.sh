@@ -1,9 +1,11 @@
 #!/bin/bash
 status=$(</var/dashboard/statuses/fastsync)
+block=$(wget -qO- https://helium-snapshots.nebra.com/latest.json | grep -Po '"'"height"'"\s*:\s*\K([^,]*)')
 
 if [[ $status == 'true' ]]
 then
-  wget -o https://pisces-snap.sidcloud.cn/snap/snap-update.sh | bash
+  sudo wget "https://helium-snapshots.nebra.com/snap-$block" -O /home/pi/hnt/miner/snap/snap-latest
+  sudo docker exec miner miner snapshot load /var/data/snap/snap-latest
   pid=$!
   echo $pid > /var/dashboard/statuses/fastsync
 else

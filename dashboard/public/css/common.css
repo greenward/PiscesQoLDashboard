@@ -154,12 +154,12 @@ body .closeable_prompt_overlay #closeable_prompt select option {
 }
 
 #main nav {
-	width: 10%;
+	width: 15%;
 	float: left;
 }
 
 #main #content {
-	width: 65%;
+	width: 60%;
 	padding: 0 2%;
 	float: left;
 	border-width: 0 1px;

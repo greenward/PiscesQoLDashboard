@@ -12,6 +12,25 @@ $info['SN'] = trim(file_get_contents("/var/dashboard/statuses/sn"));
 //$info['SN'] = "10000080081355"
 $info['Version'] = trim(file_get_contents("/var/dashboard/version"));
 $info['Update'] = trim(file_get_contents("/var/dashboard/update"));
+
+if (empty($info['OnlineStatus']))
+  $info['OnlineStatus'] = '<span style="color: orangered">Helium API Error</span>';
+if (!empty($info['CurrentBlockHeight']) && (!empty($info['MinerBlockHeight']))) {
+  $currBlockHeight = intval($info['CurrentBlockHeight']);
+  $minerBlockHeight = intval($info['MinerBlockHeight']);
+  if (($currBlockHeight - $minerBlockHeight) > 10)
+     $info['SyncMessage'] = '<span style="color: yellow;">Syncing</span>';
+  else
+     $info['SyncMessage'] = '<span style="color: lime;">Fully Synced</span>';
+
+} else {
+  if (empty($info['CurrentBlockHeight']))
+    $info['SyncMessage'] = '<span style="color: orangered;">Helium API Error</span>';
+  else if (empty($info['MinerBlockHeight']))
+    $info['SyncMessage'] = '<span style="color: orangered;">Miner fetch Error</span>';
+  else
+    $info['SyncMessage'] = '<span style="color: orangered;">Error on Miner and Helium</span>';
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -43,6 +62,7 @@ $info['Update'] = trim(file_get_contents("/var/dashboard/update"));
 				<li <?php if($page == 'home' || $page == '') { echo 'class="active_page"'; } ?>><a href="/index.php" title="Homepage"><span class="icon-home"></span><span class="text">Home</span></a></li>
 				<li <?php if($page == 'tools') { echo 'class="active_page"'; } ?>><a href="/?page=tools" title="Tools"><span class="icon-wrench"></span><span class="text">Tools</span></a></li>
 				<li <?php if($page == 'info') { echo 'class="active_page"'; } ?>><a href="/?page=info" title="Information"><span class="icon-info"></span><span class="text">Info</span></a></li>
+                <li <?php if($page == 'diagnostics') { echo 'class="active_page"'; } ?>><a href="/?page=diagnostics" title="Diagnostics"><span class="icon-info"></span><span class="text">Diagnostics</span></a></li>
 			</ul>
 
 		</nav>
@@ -82,6 +102,10 @@ $info['Update'] = trim(file_get_contents("/var/dashboard/update"));
 					include('/var/dashboard/pages/clearblockchain.php');
 					break;
 
+                case 'diagnostics':
+                    include('/var/dashboard/pages/diagnostics.php');
+                    break;
+
 				default:
 					include('/var/dashboard/pages/home.php');
 					break;
@@ -94,8 +118,11 @@ $info['Update'] = trim(file_get_contents("/var/dashboard/update"));
 				<span class="icon-grid"></span>
 				<h3>BlockChain Info</h3>
 				<ul id="info_height_data">
-					<?php 
-					echo '<li>Miner Height: '.$info['MinerBlockHeight'].'</li><li>Live Height: '.$info['CurrentBlockHeight'].'</li><li>Online Status: '.$info['OnlineStatus'].'</li>'; ?>
+					<?php
+                    echo '<li>Sync Status: <br/><br/>'.$info['SyncMessage'].'<br/><br/></li>';
+					echo '<li>Miner Height: '.$info['MinerBlockHeight'].'</li>';
+                    echo '<li>Live Height: '.$info['CurrentBlockHeight'].'</li>';
+                    echo '<li>Online Status: '.$info['OnlineStatus'].'</li>'; ?>
 				</ul>
 			</div>
 
