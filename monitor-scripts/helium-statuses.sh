@@ -25,4 +25,4 @@ echo $lat > /var/dashboard/statuses/lat
 echo $lng > /var/dashboard/statuses/lng
 echo $height > /var/dashboard/statuses/current_blockheight
 echo $recent_activity > /var/dashboard/statuses/recent_activity
-sudo docker exec miner miner info height > /var/dashboard/statuses/infoheight
+bash /etc/monitor-scripts/info-height.sh

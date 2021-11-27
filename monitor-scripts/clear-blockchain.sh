@@ -6,8 +6,9 @@ if [[ $service == 'start' ]]; then
   echo 'running' > /var/dashboard/services/$name
   echo 'Stopping currently running docker...' > /var/dashboard/logs/$name.log
   docker stop miner >> /var/dashboard/logs/$name.log
+  docker kill miner >> /var/dashboard/logs/$name.log
   currentdockerstatus=$(sudo docker ps -a -f name=miner --format "{{ .Status }}")
-  if [[ $currentdockerstatus =~ 'Exited' || $currentdockerstatus == '' ]]; then
+  if [[ $currentdockerstatus =~ 'Exited' || $currentdockerstatus == '' || $currentdockerstatus =~ 'Restarting' ]]; then
     echo 'Clearing Blockchain folders...' >> /var/dashboard/logs/$name.log
     rm -rfv /home/pi/hnt/miner/blockchain.db/* >> /var/dashboard/logs/$name.log
     rm -rfv /home/pi/hnt/miner/ledger.db/* >> /var/dashboard/logs/$name.log

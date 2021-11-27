@@ -1,21 +1,19 @@
 #!/bin/bash
-status=$(</var/dashboard/statuses/fastsync)
-block=$(wget -qO- https://helium-snapshots.nebra.com/latest.json | grep -Po '"'"height"'"\s*:\s*\K([^,]*)')
+service=$(cat /var/dashboard/services/fastsync | tr -d '\n')
 
-if [[ $status == 'true' ]]
-then
-  sudo wget "https://helium-snapshots.nebra.com/snap-$block" -O /home/pi/hnt/miner/snap/snap-latest
-  sudo docker exec miner miner snapshot load /var/data/snap/snap-latest
-  pid=$!
-  echo $pid > /var/dashboard/statuses/fastsync
-else
-  if [[ $status != 'false' ]]
-  then
-    if ps -p $status > /dev/null
-    then
-      echo $status > /var/dashboard/statuses/fastsync
-    else
-      echo 'false' > /var/dashboard/statuses/fastsync
-    fi
+if [[ $service == 'start' ]]; then
+  echo 'running' > /var/dashboard/services/fastsync
+  snap_height=$(wget -q https://helium-snapshots.nebra.com/latest.json -O - | grep -Po '\"height\": [0-9]*' | sed 's/\"height\": //')
+  wget https://helium-snapshots.nebra.com/snap-$snap_height -O /home/pi/hnt/miner/snap/snap-latest
+  docker exec miner miner repair sync_pause
+  docker exec miner miner repair sync_cancel
+  docker exec miner miner snapshot load /var/data/snap/snap-latest
+fi
+
+if [[ $service == 'running' ]]; then
+  sync_state=$(docker exec miner miner repair sync_state)
+  if [[ $sync_state == 'sync active' ]]; then
+    docker exec miner miner repair sync_resume
+    echo 'stopped' > /var/dashboard/services/fastsync
   fi
 fi

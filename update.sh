@@ -1,5 +1,8 @@
 #!/bin/bash
+sudo apt-get -f install --assume-yes
+
 if ! id "admin" &> /dev/null; then
+  delgroup admin
   adduser --disabled-password --gecos "" admin
   echo admin:admin | chpasswd
   usermod admin -g sudo
@@ -19,6 +22,7 @@ if id -nG admin | grep -qw "sudo"; then
     tar -xzf latest.tar.gz
     cd dashboardinstall
     rm dashboard/logs/dashboard-update.log
+    rm dashboard/services/dashboard-update
     cp -r dashboard/* /var/dashboard/
     cp monitor-scripts/* /etc/monitor-scripts/
     cp systemd/* /etc/systemd/system/
@@ -41,6 +45,7 @@ if id -nG admin | grep -qw "sudo"; then
         systemctl start $name.service >> /var/dashboard/logs/dashboard-update.log
         systemctl daemon-reload >> /var/dashboard/logs/dashboard-update.log
       done
+    bash /etc/monitor-scripts/pubkeys.sh
     echo 'Success.' >> /var/dashboard/logs/dashboard-update.log
     echo 'stopped' > /var/dashboard/services/dashboard-update
   else
